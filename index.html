@@ -19,23 +19,11 @@
             fetch(proxyUrl + targetUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const htmlContent = data.contents; // Get the HTML content
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlContent, 'text/html');
-
-                    // Find the <select> element with the options
-                    const options = doc.querySelectorAll('option');
-
-                    // Prepare the list where rewards will be displayed
+                    console.log(data.contents); // Log the full HTML content from the remote page
                     const rewardsList = document.getElementById('rewardsList');
-                    rewardsList.innerHTML = ''; // Clear existing list
 
-                    // Loop through each <option> and extract reward details
-                    options.forEach(option => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = option.textContent; // Set the reward name
-                        rewardsList.appendChild(listItem); // Add to the list
-                    });
+                    // Insert fetched HTML content for debugging purposes
+                    rewardsList.innerHTML = data.contents;
                 })
                 .catch(error => {
                     console.error('Error fetching rewards:', error);
