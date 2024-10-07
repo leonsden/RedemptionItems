@@ -10,20 +10,17 @@
     <ul id="rewardsList"></ul> <!-- Unordered list to display the rewards -->
 
     <script>
-        // This function will be executed when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            // Use AllOrigins proxy to fetch the page content
-            const proxyUrl = 'https://api.allorigins.win/get?url=';
-            const targetUrl = encodeURIComponent('http://simnationserver.com/redeem/');
+            // Using CORS-Anywhere proxy to bypass CORS restrictions
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const targetUrl = 'http://simnationserver.com/redeem/';
 
             fetch(proxyUrl + targetUrl)
-                .then(response => response.json())
+                .then(response => response.text()) // Fetch as plain text
                 .then(data => {
-                    console.log(data.contents); // Log the full HTML content from the remote page
+                    console.log(data); // Log the HTML content from the page for debugging
                     const rewardsList = document.getElementById('rewardsList');
-
-                    // Insert fetched HTML content for debugging purposes
-                    rewardsList.innerHTML = data.contents;
+                    rewardsList.innerHTML = data; // Insert the fetched HTML for debugging
                 })
                 .catch(error => {
                     console.error('Error fetching rewards:', error);
