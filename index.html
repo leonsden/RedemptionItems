@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimNation Rewards</title>
+    <title>Available Rewards</title>
 </head>
 <body>
-    <h1>Available Rewards</h1>
-    <ul id="rewardsList"></ul> <!-- Unordered list to display the rewards -->
+    <h1>Rewards currently available to Patrons:</h1>
+    <ul id="rewardsList">
+        <!-- The rewards will be inserted here dynamically -->
+    </ul>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Using CORS-Anywhere proxy to bypass CORS restrictions
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = 'http://simnationserver.com/redeem/';
+        // Fetch rewards from the AllOrigins Proxy
+        fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('http://simnationserver.com/redeem/'))
+            .then(response => response.json())
+            .then(data => {
+                // Parse the response HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
 
-            fetch(proxyUrl + targetUrl)
-                .then(response => response.text()) // Fetch as plain text
-                .then(data => {
-                    console.log(data); // Log the HTML content from the page for debugging
-                    const rewardsList = document.getElementById('rewardsList');
-                    rewardsList.innerHTML = data; // Insert the fetched HTML for debugging
-                })
-                .catch(error => {
-                    console.error('Error fetching rewards:', error);
+                // Extract the rewards from the <select> tag
+                const options = doc.querySelectorAll('#giftSelection option');
+                const rewardsList = document.getElementById('rewardsList');
+
+                // Loop through each option and display it
+                options.forEach(option => {
+                    const reward = option.textContent;
+                    const listItem = document.createElement('li');
+                    listItem.textContent = reward;
+                    rewardsList.appendChild(listItem);
                 });
-        });
+            })
+            .catch(error => {
+                console.error('Error fetching rewards:', error);
+                document.getElementById('rewardsList').textContent = 'Failed to load rewards.';
+            });
     </script>
 </body>
 </html>
