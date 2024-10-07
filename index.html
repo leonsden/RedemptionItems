@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>Available Rewards</h1>
-    <select id="giftSelection"></select>
-    <button id="fetchRewards">Fetch Rewards</button>
+    <ul id="rewardsList"></ul> <!-- Unordered list to display the rewards -->
 
     <script>
-        document.getElementById('fetchRewards').addEventListener('click', () => {
+        // This function will be executed when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
             // Use AllOrigins proxy to fetch the page content
             const proxyUrl = 'https://api.allorigins.win/get?url=';
             const targetUrl = encodeURIComponent('http://simnationserver.com/redeem/');
@@ -22,17 +22,19 @@
                     const htmlContent = data.contents; // Get the HTML content
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(htmlContent, 'text/html');
-                    const options = doc.querySelectorAll('#giftSelection option');
 
-                    // Populate the select dropdown with the rewards
-                    const giftSelection = document.getElementById('giftSelection');
-                    giftSelection.innerHTML = ''; // Clear existing options
+                    // Find the <select> element with the options
+                    const options = doc.querySelectorAll('option');
 
+                    // Prepare the list where rewards will be displayed
+                    const rewardsList = document.getElementById('rewardsList');
+                    rewardsList.innerHTML = ''; // Clear existing list
+
+                    // Loop through each <option> and extract reward details
                     options.forEach(option => {
-                        const newOption = document.createElement('option');
-                        newOption.value = option.value;
-                        newOption.textContent = option.textContent;
-                        giftSelection.appendChild(newOption);
+                        const listItem = document.createElement('li');
+                        listItem.textContent = option.textContent; // Set the reward name
+                        rewardsList.appendChild(listItem); // Add to the list
                     });
                 })
                 .catch(error => {
