@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimNation Rewards</title>
+</head>
+<body>
+    <h1>Available Rewards</h1>
+    <select id="giftSelection"></select>
+    <button id="fetchRewards">Fetch Rewards</button>
+
+    <script>
+        document.getElementById('fetchRewards').addEventListener('click', () => {
+            // Make an API request to the page after validating the code (if needed)
+            fetch('http://simnationserver.com/redeem/')
+                .then(response => response.text())
+                .then(data => {
+                    // Parse the data and extract the reward items
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const options = doc.querySelectorAll('#giftSelection option');
+
+                    // Populate the select dropdown with the rewards
+                    const giftSelection = document.getElementById('giftSelection');
+                    giftSelection.innerHTML = ''; // Clear existing options
+
+                    options.forEach(option => {
+                        const newOption = document.createElement('option');
+                        newOption.value = option.value;
+                        newOption.textContent = option.textContent;
+                        giftSelection.appendChild(newOption);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching rewards:', error);
+                });
+        });
+    </script>
+</body>
+</html>
