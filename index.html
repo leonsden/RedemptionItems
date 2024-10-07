@@ -12,13 +12,16 @@
 
     <script>
         document.getElementById('fetchRewards').addEventListener('click', () => {
-            // Make an API request to the page after validating the code (if needed)
-            fetch('http://simnationserver.com/redeem/')
-                .then(response => response.text())
+            // Use AllOrigins proxy to fetch the page content
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
+            const targetUrl = encodeURIComponent('http://simnationserver.com/redeem/');
+
+            fetch(proxyUrl + targetUrl)
+                .then(response => response.json())
                 .then(data => {
-                    // Parse the data and extract the reward items
+                    const htmlContent = data.contents; // Get the HTML content
                     const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
+                    const doc = parser.parseFromString(htmlContent, 'text/html');
                     const options = doc.querySelectorAll('#giftSelection option');
 
                     // Populate the select dropdown with the rewards
